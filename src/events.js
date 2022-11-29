@@ -8,6 +8,7 @@ player.on('connectionError', (queue, error) => {
     console.log(`Error emitted from the connection ${error.message}`);
 });
 
+//Music Start Playing...
 player.on('trackStart', (queue, track) => {
     if (!client.config.opt.loopMessage && queue.repeatMode !== 0) return;
     const embed = new EmbedBuilder()
@@ -45,7 +46,11 @@ player.on('trackStart', (queue, track) => {
 
 player.on('trackAdd', (queue, track) => {
    
-    queue.metadata.send(`Track ${track.title} added in the queue ✅`);
+    const embed = new EmbedBuilder()
+    .setAuthor({name: `Track ${track.title} added in the queue ✅`, iconURL: track.requestedBy.avatarURL()})
+    .setColor('#13f857')
+    queue.metadata.send({ embeds: [embed] })
+
 });
 
 player.on('botDisconnect', (queue) => {
@@ -57,9 +62,16 @@ player.on('channelEmpty', (queue) => {
 });
 
 player.on('queueEnd', (queue) => {
-    queue.metadata.send('I finished reading the whole queue ✅');
+    const embed = new EmbedBuilder()
+    .setAuthor({name: `Queue ended, leaving the voice channel... ❌`, iconURL: queue.connection.channel.guild.iconURL()})
+    .setColor('#13f857')
+    queue.metadata.send({ embeds: [embed] })
 });
 
+//Add Music Playlist To Queue
 player.on('tracksAdd', (queue, tracks) => {
-    queue.metadata.send(`All the songs in playlist added into the queue ✅`);
+    const embed = new EmbedBuilder()
+    .setAuthor({name: `Added ${tracks.length} tracks to the queue ✅`, iconURL: queue.connection.channel.guild.iconURL()})
+    .setColor('#13f857')
+    queue.metadata.send({ embeds: [embed] })
 });
